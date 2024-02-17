@@ -12,3 +12,8 @@ kodunu girmeniz gerek bu gerekli kaynak kodlarını yükleyecektir
 front endi son olarak ayağa kaldırmak için
 "npm run dev"
 kodunu kullanıyoruz  projemiz ayağa kalkmış olucaktır
+
+
+kullandığımız parti uygulamaları dökümantasyonları
+https://primevue.org/
+https://primeflex.org/
