@@ -17,3 +17,5 @@ kodunu kullanıyoruz  projemiz ayağa kalkmış olucaktır
 kullandığımız parti uygulamaları dökümantasyonları
 https://primevue.org/
 https://primeflex.org/
+
+Db diagram https://dbdiagram.io/d/yemek-otomasyon-65d08cc1ac844320ae5b9f06
