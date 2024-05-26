@@ -29,11 +29,11 @@ namespace CrudProject.Controller
         [HttpGet("user")]
         public async Task<IActionResult> GetUser()
         {
-            //Token Kontrolü
-            GetToken g = new GetToken(_dbHelper);
-            var login = g.GetUserByToken(ControllerContext);
-            if (!login.status)
-                return BadRequest(ResponseHelper.UnAuthorizedResponse());
+            ////Token Kontrolü
+            //GetToken g = new GetToken(_dbHelper);
+            //var login = g.GetUserByToken(ControllerContext);
+            //if (!login.status)
+            //    return BadRequest(ResponseHelper.UnAuthorizedResponse());
 
             using (var connection = _dbHelper.GetConnection())
             {
@@ -209,9 +209,9 @@ namespace CrudProject.Controller
                     {
                         return Unauthorized(new { message = "Kullanıcı Adı Bulunamadı!" });
                     }
-                    //
+                    
                     userLogin.password = Helper.ComputeMD5Hash(userLogin.password);
-                    //
+                    
                     count = 0;
                     sql = @"SELECT COUNT(*) 
                             FROM users  
@@ -222,7 +222,7 @@ namespace CrudProject.Controller
 
                     if (count == 0)
                     {
-                        return Unauthorized(new { message = "Şifre Bulunamadı!" });
+                        return Unauthorized(new { message = "Şifre Hatalı!" });
                     }
 
                     var token = Guid.NewGuid().ToString("N");
@@ -230,8 +230,7 @@ namespace CrudProject.Controller
 
                     sql = @"UPDATE users 
                             SET 
-                                token = @token, 
-                                token_time = @token_time
+                                token = @token
                             WHERE
                                 username = @username AND password = @password";
 
