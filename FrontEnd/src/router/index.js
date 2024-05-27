@@ -71,7 +71,7 @@ const router = createRouter({
       component: AppLayout,
       children: [
         {
-          path: "/users",
+          path: "users",
           name: "users",
           component: () => import("@/views/pages/users/users.vue"),
           meta: {

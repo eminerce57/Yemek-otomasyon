@@ -59,7 +59,7 @@ const logIn = () => {
           <div>
             <label for="email1" class="block text-900 text-xl font-medium mb-2">Kullanıcı Adı</label>
             <InputText id="email1" type="text" placeholder="" class="w-full md:w-30rem mb-5" style="padding: 1rem"
-              v-model="user.email" @keyup.enter="logIn" />
+              v-model="user.username" @keyup.enter="logIn" />
 
             <label for="password1" class="block text-900 font-medium text-xl mb-2">Şifre</label>
             <InputText id="password1" type="password" placeholder="Şifre" class="w-full md:w-30rem mb-5"

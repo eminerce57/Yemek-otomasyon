@@ -6,13 +6,10 @@ var ls = new SecureLS({ isCompression: false });
 //**vuex module import */
 import moduleLogin from "./Modules/loginModule";
 import moduleInitAuth from "./Modules/initAuth";
-import moduleSignalR from "./Modules/signalR";
-
 export default createStore({
   modules: {
     moduleLogin,
-    moduleInitAuth,
-    moduleSignalR,
+    moduleInitAuth
   },
   state: {
     isSuccess: false,

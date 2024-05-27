@@ -1,8 +1,7 @@
 <script setup>
 import { ref, onMounted, defineAsyncComponent, computed } from "vue";
-const blogs=ref([])
-// import BlogService from "@/service/BlogService";
-// const blogService = new BlogService();
+
+
 
 onMounted(()=>{
   getList()
@@ -10,11 +9,7 @@ onMounted(()=>{
 
 const getList = (args) => {
 
-blogService.GetBlogs().then((response) => {
-  if (response) {
-    blogs.value = response;
-  }
-});
+
 };
 
 

@@ -13,19 +13,15 @@ const moduleInitAuth = {
   },
   actions: {
     initAuth({ commit, dispatch }) {
-      let ga = localStorage.getItem("ga");
+
       let token = localStorage.getItem("token");
       commit("setToken", token);
 
-      if (ga && token) {
-        commit("setGa", ga);
-        commit("setName", localStorage.getItem("name"));
-
+      if (token) {
+     
+        commit("setUserName", localStorage.getItem("username"));
         commit("setId", localStorage.getItem("id"));
 
-        dispatch("modules", { id: localStorage.getItem("id"), token: token });
-
-        // router.push("/")
       } else {
         if (router.path == "/auth/login") router.push("/auth/login");
 

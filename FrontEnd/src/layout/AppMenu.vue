@@ -24,11 +24,7 @@ const model = ref([
     icon: "pi pi-fw pi-briefcase",
     to: "/pages",
     items: [
-      {
-        label: "Blog",
-        icon: "pi pi-fw pi-book",
-        to: "/pages/blog",
-      },
+  
     ],
   },
   {
@@ -36,16 +32,12 @@ const model = ref([
     icon: "pi pi-fw pi-users",
     to: "/pages",
     items: [
-      // {
-      //   label: "users",
-      //   icon: "pi pi-fw pi-book",
-      //   to: "/pages/users",
-      // },
-      // {
-      //   label: "companies",
-      //   icon: "pi pi-fw pi-book",
-      //   to: "/pages/companies",
-      // },
+      {
+        label: "users",
+        icon: "pi pi-fw pi-book",
+        to: "/pages/users",
+      },
+
     ],
   },
 

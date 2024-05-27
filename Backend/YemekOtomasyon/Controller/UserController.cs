@@ -29,11 +29,10 @@ namespace CrudProject.Controller
         [HttpGet("user")]
         public async Task<IActionResult> GetUser()
         {
-            ////Token Kontrolü
-            //GetToken g = new GetToken(_dbHelper);
-            //var login = g.GetUserByToken(ControllerContext);
-            //if (!login.status)
-            //    return BadRequest(ResponseHelper.UnAuthorizedResponse());
+            GetToken g = new GetToken(_dbHelper);
+            var login = g.GetUserByToken(ControllerContext);
+            if (!login.status)
+                return BadRequest(ResponseHelper.UnAuthorizedResponse());
 
             using (var connection = _dbHelper.GetConnection())
             {
@@ -199,44 +198,49 @@ namespace CrudProject.Controller
             {
                 try
                 {
-                    string sql = @"SELECT COUNT(*)
+
+                    userLogin.password = Helper.ComputeMD5Hash(userLogin.password);
+
+                    string sql = @"SELECT *
                                    FROM users
                                    WHERE
-                                        is_active = true AND username = @username";
-
-                    int count = connection.QueryFirstOrDefault<int>(sql, userLogin);
-                    if (count == 0)
+                                       username = @username AND password= @password";
+                    var  data = connection.Query<dynamic>(sql, userLogin).FirstOrDefault();
+                   
+                    if (data==null)
                     {
-                        return Unauthorized(new { message = "Kullanıcı Adı Bulunamadı!" });
+                        return BadRequest("Kullanici Adi ve Sifre Hatali");
                     }
-                    
-                    userLogin.password = Helper.ComputeMD5Hash(userLogin.password);
-                    
-                    count = 0;
-                    sql = @"SELECT COUNT(*) 
-                            FROM users  
-                            WHERE
-                                username = @username AND password = @password";
-                    
-                    count = connection.QueryFirstOrDefault<int>(sql, userLogin);
-
-                    if (count == 0)
+                    else
                     {
-                        return Unauthorized(new { message = "Şifre Hatalı!" });
-                    }
+                        var token = Guid.NewGuid().ToString("N");
 
-                    var token = Guid.NewGuid().ToString("N");
-                    var token_time = DateTime.Now;
-
-                    sql = @"UPDATE users 
+                        sql = @"UPDATE users 
                             SET 
                                 token = @token
                             WHERE
-                                username = @username AND password = @password";
+                                 id=@id ";
 
-                    connection.Execute(sql, new { token, token_time, userLogin.username, userLogin.password });
+                        connection.Execute(sql, new { token , id=data.id });
 
-                    return Ok(new { token });
+
+
+
+
+                         sql = @"SELECT *
+                                   FROM users
+                                   WHERE
+                                       id = @id";
+                        var userData = connection.Query<dynamic>(sql,new {id= data.id}).FirstOrDefault();
+
+
+
+
+                        return Ok(userData);
+
+                    }
+
+
                 }
                 catch (Exception ex)
                 {
