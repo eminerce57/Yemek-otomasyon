@@ -88,5 +88,37 @@ namespace CrudProject.Controller
         }
 
 
+
+        [HttpPost("update")]
+        public async Task<IActionResult> updateFood(FoodModel model)
+        {
+            GetToken g = new GetToken(_dbHelper);
+            var login = g.GetUserByToken(ControllerContext);
+            if (!login.status)
+                return BadRequest(ResponseHelper.UnAuthorizedResponse());
+
+            using (var connection = _dbHelper.GetConnection())
+            {
+                try
+                {
+                  
+                    string sql = @"UPDATE foods SET ";
+                    connection.Execute(sql, model);
+
+
+                    return Ok("Kayıt Başarıyla Eklendi");
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ResponseHelper.ExceptionResponse(ex.Message));
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+        }
+
+
     }
 }
