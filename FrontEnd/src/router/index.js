@@ -79,6 +79,16 @@ const router = createRouter({
             requiresAuth: true,
           },
         },
+
+        {
+          path: "food",
+          name: "Yemekler",
+          component: () => import("@/views/pages/food/food.vue"),
+          meta: {
+            title: "Yemekler",
+            requiresAuth: true,
+          },
+        },
       ],
     },
 

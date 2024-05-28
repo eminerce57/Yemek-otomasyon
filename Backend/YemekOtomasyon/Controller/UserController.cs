@@ -127,7 +127,8 @@ namespace CrudProject.Controller
                             SET 
                                 name = @name, 
                                 surname = @surname,
-                                username = @username
+                                username = @username,
+                                is_admin=@is_admin
                             WHERE
                                 id = @id";
 

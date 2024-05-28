@@ -166,8 +166,7 @@ const changePassword = () => {
     <Toast />
     <div style="width: 15%;">
       <router-link to="/" class="layout-topbar-logo" style="width: 100%;">
-        <img  :src="logoUrl" alt="logo" />
-PANEL
+        YEMEK OTOMASYON
       </router-link>
     </div>
     <i

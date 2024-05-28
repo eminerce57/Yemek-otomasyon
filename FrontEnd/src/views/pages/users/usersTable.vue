@@ -1,5 +1,5 @@
 <script setup>
-import dayjs from "dayjs";
+
 
 const { data } = defineProps({
   data: Array,
@@ -26,8 +26,6 @@ const toggleDeleteUserModal = (data) => {
     class="p-datatable p-2"
     responsiveLayout="scroll"
   >
-    <Column header="#">
-    </Column>
     <Column header="ID">
       <template #body="{ data }">
         {{ data?.id || "-" }}
@@ -46,16 +44,6 @@ const toggleDeleteUserModal = (data) => {
     <Column header="Kullanıcı Adı">
       <template #body="{ data }">
         {{ data?.username || "-" }}
-      </template>
-    </Column>
-    <Column header="Token">
-      <template #body="{ data }">
-        {{ data?.token || "-" }}
-      </template>
-    </Column>
-    <Column header="Token Time">
-      <template #body="{ data }">
-        {{ data?.token_time ? dayjs(data?.token_date).format("DD/MM/YYYY") : "-" }}
       </template>
     </Column>
     <Column header="Yönetici mi">

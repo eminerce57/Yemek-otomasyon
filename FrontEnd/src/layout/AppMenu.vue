@@ -20,7 +20,7 @@ const model = ref([
     items: [{ label: "Ana sayfa", icon: "pi pi-fw pi-home", to: "/" }],
   },
   {
-    label: "Sayfalar",
+    label: "İşlemler",
     icon: "pi pi-fw pi-briefcase",
     to: "/pages",
     items: [
@@ -32,8 +32,13 @@ const model = ref([
     icon: "pi pi-fw pi-users",
     to: "/pages",
     items: [
+    {
+        label: "Yemekler",
+        icon: "pi pi-tags",
+        to: "/pages/food",
+      },
       {
-        label: "users",
+        label: "Kullanıcılar",
         icon: "pi pi-fw pi-book",
         to: "/pages/users",
       },
