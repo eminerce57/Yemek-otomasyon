@@ -102,7 +102,7 @@ const router = createRouter({
         },
              
         {
-          path: "company/:id",
+          path: "company/:id/:name",
           name: "Şirket Kullanıcıları",
           component: () => import("@/views/pages/companyUsers/companyUsers.vue"),
           meta: {

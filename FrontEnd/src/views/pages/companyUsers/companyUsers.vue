@@ -2,24 +2,21 @@
 import { ref, onMounted } from "vue";
 import { useToast } from "primevue/usetoast";
 import UserService from "@/service/UsersService";
-
+import { useRouter,useRoute} from "vue-router";
 import companyUsersTable from "./companyUsersTable.vue";
 
 const userService = new UserService();
-
+const route =useRoute();
 const toast = useToast();
 const users = ref([]);
 
 // Modals
 const userModal = ref(false);
-const deleteUserModal = ref(false);
-
-const submitted = ref(false);
-
 const formData = ref({});
-
+const companyName=ref("")
 onMounted(() => {
   getList();
+  companyName.value= route.params.name
 });
 
 const getList = (args) => {
@@ -134,7 +131,7 @@ const deleteUser = () => {
           <div class="col-12">
             <Toolbar class="mb-4">
               <template v-slot:start>
-                <h5>Kullanıcı Listesi</h5>
+                <h5>{{ companyName }} kullanıcı Listesi</h5>
               </template>
               <template v-slot:end>
                 <Button

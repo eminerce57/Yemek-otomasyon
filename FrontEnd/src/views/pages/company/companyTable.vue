@@ -15,7 +15,7 @@ const deleteCompany = (data) => {
   emit("deleteCompany", data.id);
 };
 const redirectToCompanyUsers = (data) => {
-  router.push(`company/${data.id}`);
+  router.push(`company/${data.id}/${data.name}`);
 };
 </script>
 
