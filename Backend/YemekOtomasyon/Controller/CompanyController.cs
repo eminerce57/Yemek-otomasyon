@@ -102,7 +102,7 @@ namespace CrudProject.Controller
                 try
                 {
                   
-                    string sql = @"UPDATE company SET name=@name, tax_no=@amount WHERE id=@id";
+                    string sql = @"UPDATE company SET name=@name, tax_no=@tax_no WHERE id=@id";
                     connection.Execute(sql, model);
 
 

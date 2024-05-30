@@ -89,6 +89,27 @@ const router = createRouter({
             requiresAuth: true,
           },
         },
+        
+        
+        {
+          path: "company",
+          name: "Şirketler",
+          component: () => import("@/views/pages/company/company.vue"),
+          meta: {
+            title: "Şirketler",
+            requiresAuth: true,
+          },
+        },
+             
+        {
+          path: "company/:id",
+          name: "Şirket Kullanıcıları",
+          component: () => import("@/views/pages/company/company.vue"),
+          meta: {
+            title: "Şirket Kullanıcıları",
+            requiresAuth: true,
+          },
+        },
       ],
     },
 

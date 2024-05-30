@@ -18,7 +18,7 @@ onMounted(() => {
 
 const getList = () => {
   companyService.getCompany().then((response) => {
-    food.value = response;
+    company.value = response;
   });
 };
 
@@ -35,8 +35,8 @@ const toggleEditModal = (data) => {
 
 //actions
 
-const addFood = () => {
-  if (!formData.value.name || !formData.value.amount) {
+const addCompany = () => {
+  if (!formData.value.name || !formData.value.tax_no) {
     toast.add({
       severity: "warn",
       summary: "Uyarı!",
@@ -44,7 +44,7 @@ const addFood = () => {
       life: 3000,
     });
   } else {
-    foodService.addFood(formData.value).then((response) => {
+    companyService.addCompany(formData.value).then((response) => {
       getList();
       formData.value = {};
       companyModal.value = !companyModal.value;
@@ -52,7 +52,28 @@ const addFood = () => {
   }
 };
 
+const updateCompany = () => {
+  if (!formData.value.name || !formData.value.tax_no) {
+    toast.add({
+      severity: "warn",
+      summary: "Uyarı!",
+      detail: "Lütfen zorunlu alanları doldurunuz",
+      life: 3000,
+    });
+  } else {
+    companyService.updateCompany(formData.value).then((response) => {
+      getList();
+      formData.value = {};
+      companyModal.value = !companyModal.value;
+    });
+  }
+};
 
+const deleteCompany = (id) => {
+  companyService.deleteCompany(id).then((response) => {
+    getList();
+  });
+};
 </script>
 
 <template>
@@ -77,10 +98,15 @@ const addFood = () => {
             </Toolbar>
           </div>
           <div class="col-12">
-            <div v-if="food?.length === 0" class="flex justify-content-center">
+            <div v-if="company?.length === 0" class="flex justify-content-center">
               Kayıt Bulunamadı.
             </div>
-            <companyTable v-else :data="food" @toggleEditModal="toggleEditModal" @deleteFood="deleteFood" />
+            <companyTable
+              v-else
+              :data="company"
+              @toggleEditModal="toggleEditModal"
+              @deleteCompany="deleteCompany"
+            />
           </div>
         </div>
       </div>
@@ -88,14 +114,14 @@ const addFood = () => {
 
     <!--****************** START:: DELETE COMMUNITY MODAL ::START *******************************-->
     <Dialog
-      v-model:visible="foodModal"
+      v-model:visible="companyModal"
       :style="{ width: '760px' }"
-      :header="formData.id ? 'Yemek Güncelle' : 'Yemek Ekle'"
+      :header="formData.id ? 'Şirket Güncelle' : 'Şirket Ekle'"
       :modal="true"
     >
       <div class="grid">
         <div class="col-6">
-          <label>Yemek İsmi</label>
+          <label>Şirket Adı</label>
           <InputText
             class="w-full"
             placeholder="İsim"
@@ -103,11 +129,11 @@ const addFood = () => {
           />
         </div>
         <div class="col-6">
-          <label>Birim Fiyat</label>
-          <InputNumber
+          <label>Vergi No</label>
+          <InputText
             class="w-full"
-            placeholder="Birim Fiyat"
-            v-model="formData.amount"
+            placeholder="Vergi No"
+            v-model="formData.tax_no"
           />
         </div>
       </div>
@@ -117,14 +143,14 @@ const addFood = () => {
           label="Kaydet"
           icon="pi pi-plus"
           class="p-button-success"
-          @click="addFood"
+          @click="addCompany"
         />
         <Button
           v-else
           label="Güncelle"
           icon="pi pi-plus"
           class="p-button-success"
-          @click="updateFood"
+          @click="updateCompany"
         />
       </template>
     </Dialog>

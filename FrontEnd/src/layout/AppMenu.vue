@@ -38,6 +38,11 @@ const model = ref([
         to: "/pages/food",
       },
       {
+        label: "Company",
+        icon: "pi pi-microsoft",
+        to: "/pages/company",
+      },
+      {
         label: "Kullanıcılar",
         icon: "pi pi-fw pi-book",
         to: "/pages/users",
