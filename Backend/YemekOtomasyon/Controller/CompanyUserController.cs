@@ -57,7 +57,7 @@ namespace CrudProject.Controller
 
 
         [HttpPost("add")]
-        public async Task<IActionResult> AddCompany(CompanyModel model)
+        public async Task<IActionResult> AddCompany(CompanyUsersModel model)
         {
             GetToken g = new GetToken(_dbHelper);
             var login = g.GetUserByToken(ControllerContext);
@@ -70,7 +70,7 @@ namespace CrudProject.Controller
                 {
                    
                     model.is_active = true; 
-                    string sql = @"INSERT INTO company (name,tax_no,is_active) VALUES(@name,@tax_no,@is_active)";
+                    string sql = @"INSERT INTO company_users (name,tax_no,is_active) VALUES(@name,@tax_no,@is_active)";
                     connection.Execute(sql, model);
 
 
@@ -90,7 +90,7 @@ namespace CrudProject.Controller
 
 
         [HttpPost("update")]
-        public async Task<IActionResult> UpdateCompany(CompanyModel model)
+        public async Task<IActionResult> UpdateCompany(CompanyUsersModel model)
         {
             GetToken g = new GetToken(_dbHelper);
             var login = g.GetUserByToken(ControllerContext);
