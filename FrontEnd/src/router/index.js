@@ -104,7 +104,7 @@ const router = createRouter({
         {
           path: "company/:id",
           name: "Şirket Kullanıcıları",
-          component: () => import("@/views/pages/company/company.vue"),
+          component: () => import("@/views/pages/companyUsers/companyUsers.vue"),
           meta: {
             title: "Şirket Kullanıcıları",
             requiresAuth: true,

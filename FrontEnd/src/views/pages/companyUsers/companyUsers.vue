@@ -3,7 +3,7 @@ import { ref, onMounted } from "vue";
 import { useToast } from "primevue/usetoast";
 import UserService from "@/service/UsersService";
 
-import UsersTable from "./usersTable.vue";
+import companyUsersTable from "./companyUsersTable.vue";
 
 const userService = new UserService();
 
@@ -150,7 +150,7 @@ const deleteUser = () => {
             <div v-if="users?.length === 0" class="flex justify-content-center">
               Kayıt Bulunamadı.
             </div>
-            <UsersTable
+            <companyUsersTable
               v-else
               :data="users"
               @toggleUserModal="toggleUserModal"
