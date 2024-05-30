@@ -12,5 +12,14 @@ export default class FoodService {
       return response.data;
     });
   } 
- 
+  updateFood(data) {
+    return axiosApp.post("Food/update",data).then((response) => {
+      return response.data;
+    });
+  };
+  deleteFood(data) {
+    return axiosApp.delete("Food/delete/"+data).then((response) => {
+      return response.data;
+    });
+  } 
 }

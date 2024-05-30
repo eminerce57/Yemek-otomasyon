@@ -1,15 +1,15 @@
 <script setup>
 import { ref, onMounted, defineAsyncComponent } from "vue";
 import { useToast } from "primevue/usetoast";
-import FoodService from "@/service/FoodService";
-const FoodTable = defineAsyncComponent(() => import("./foodTable.vue"));
+import CompanyService from "@/service/CompanyService";
+const companyTable = defineAsyncComponent(() => import("./companyTable.vue"));
 
-const foodService = new FoodService();
+const companyService = new CompanyService();
 const toast = useToast();
 // Modals
 const formData = ref({});
-const food = ref([]);
-const foodModal = ref(false);
+const company = ref([]);
+const companyModal = ref(false);
 onMounted(() => {
   getList();
 });
@@ -17,7 +17,7 @@ onMounted(() => {
 // getlist
 
 const getList = () => {
-  foodService.getFood().then((response) => {
+  companyService.getCompany().then((response) => {
     food.value = response;
   });
 };
@@ -26,11 +26,11 @@ const getList = () => {
 
 const toggleAddmodal = () => {
   formData.value = {};
-  foodModal.value = !foodModal.value;
+  companyModal.value = !companyModal.value;
 };
 const toggleEditModal = (data) => {
   formData.value = data;
-  foodModal.value = !foodModal.value;
+  companyModal.value = !companyModal.value;
 };
 
 //actions
@@ -47,33 +47,12 @@ const addFood = () => {
     foodService.addFood(formData.value).then((response) => {
       getList();
       formData.value = {};
-      foodModal.value = !foodModal.value;
+      companyModal.value = !companyModal.value;
     });
   }
 };
 
-const updateFood = () => {
-  if (!formData.value.name || !formData.value.amount) {
-    toast.add({
-      severity: "warn",
-      summary: "Uyarı!",
-      detail: "Lütfen zorunlu alanları doldurunuz",
-      life: 3000,
-    });
-  } else {
-    foodService.updateFood(formData.value).then((response) => {
-      getList();
-      formData.value = {};
-      foodModal.value = !foodModal.value;
-    });
-  }
-};
 
-const deleteFood = (id) => {
-  foodService.deleteFood(id).then((response) => {
-    getList();
-  });
-};
 </script>
 
 <template>
@@ -85,11 +64,11 @@ const deleteFood = (id) => {
           <div class="col-12">
             <Toolbar class="mb-4">
               <template v-slot:start>
-                <h5>Yemek Listesi</h5>
+                <h5>Şirket Listesi</h5>
               </template>
               <template v-slot:end>
                 <Button
-                  label="Yemek Ekle"
+                  label="Şirket Ekle"
                   icon="pi pi-plus"
                   class="p-button-primary mr-2"
                   @click="toggleAddmodal"
@@ -101,7 +80,7 @@ const deleteFood = (id) => {
             <div v-if="food?.length === 0" class="flex justify-content-center">
               Kayıt Bulunamadı.
             </div>
-            <FoodTable v-else :data="food" @toggleEditModal="toggleEditModal" @deleteFood="deleteFood" />
+            <companyTable v-else :data="food" @toggleEditModal="toggleEditModal" @deleteFood="deleteFood" />
           </div>
         </div>
       </div>

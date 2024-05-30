@@ -13,12 +13,12 @@ namespace CrudProject.Controller
 {
     [ApiController]
     [Route("[controller]")]
-    public class FoodController : ControllerBase
+    public class CompanyController : ControllerBase
     {
 
         private readonly DbHelper _dbHelper;
 
-        public FoodController(DbHelper dbHelper)
+        public CompanyController(DbHelper dbHelper)
         {
             _dbHelper = dbHelper;
         }
@@ -27,7 +27,7 @@ namespace CrudProject.Controller
 
 
         [HttpGet("")]
-        public async Task<IActionResult> GetFood()
+        public async Task<IActionResult> GetCompany()
         {
             GetToken g = new GetToken(_dbHelper);
             var login = g.GetUserByToken(ControllerContext);
@@ -38,7 +38,7 @@ namespace CrudProject.Controller
             {
                 try
                 {
-                    string sql = @"SELECT * FROM foods where is_active = true";
+                    string sql = @"SELECT * FROM company where is_active = true";
 
                     var List = connection.Query<dynamic>(sql).ToList();
 
@@ -57,7 +57,7 @@ namespace CrudProject.Controller
 
 
         [HttpPost("add")]
-        public async Task<IActionResult> addFood(FoodModel model)
+        public async Task<IActionResult> AddCompany(CompanyModel model)
         {
             GetToken g = new GetToken(_dbHelper);
             var login = g.GetUserByToken(ControllerContext);
@@ -68,9 +68,9 @@ namespace CrudProject.Controller
             {
                 try
                 {
-                    model.created_user_id = login.data.id;
+                   
                     model.is_active = true; 
-                    string sql = @"INSERT INTO foods (name,amount,created_user_id,is_active) VALUES(@name,@amount,@created_user_id,@is_active)";
+                    string sql = @"INSERT INTO company (name,tax_no,is_active) VALUES(@name,@tax_no,@is_active)";
                     connection.Execute(sql, model);
 
 
@@ -90,7 +90,7 @@ namespace CrudProject.Controller
 
 
         [HttpPost("update")]
-        public async Task<IActionResult> updateFood(FoodModel model)
+        public async Task<IActionResult> UpdateCompany(CompanyModel model)
         {
             GetToken g = new GetToken(_dbHelper);
             var login = g.GetUserByToken(ControllerContext);
@@ -102,7 +102,7 @@ namespace CrudProject.Controller
                 try
                 {
                   
-                    string sql = @"UPDATE foods SET name=@name, amount=@amount WHERE id=@id";
+                    string sql = @"UPDATE company SET name=@name, tax_no=@amount WHERE id=@id";
                     connection.Execute(sql, model);
 
 
@@ -120,7 +120,7 @@ namespace CrudProject.Controller
         }
 
         [HttpDelete("delete/{id}")]
-        public async Task<IActionResult> deleteFood(int id)
+        public async Task<IActionResult> deleteCompany(int id)
         {
             GetToken g = new GetToken(_dbHelper);
             var login = g.GetUserByToken(ControllerContext);
@@ -132,7 +132,7 @@ namespace CrudProject.Controller
                 try
                 {
 
-                    string sql = @"UPDATE foods SET is_active=false WHERE id=@id";
+                    string sql = @"UPDATE company SET is_active=false WHERE id=@id";
                     connection.Execute(sql, new {id=id});
 
 
