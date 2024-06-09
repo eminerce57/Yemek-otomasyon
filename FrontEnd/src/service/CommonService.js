@@ -7,4 +7,9 @@ export default class CommonService {
     });
   }
 
+  getFood() {
+    return axiosApp.get("Food/").then((response) => {
+      return response.data;
+    });
+  } 
 }

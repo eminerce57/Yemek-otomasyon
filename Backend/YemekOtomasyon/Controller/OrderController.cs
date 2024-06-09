@@ -26,6 +26,48 @@ namespace CrudProject.Controller
 
 
 
+        [HttpGet("")]
+        public async Task<IActionResult> GetFood()
+        {
+            GetToken g = new GetToken(_dbHelper);
+            var login = g.GetUserByToken(ControllerContext);
+            if (!login.status)
+                return BadRequest(ResponseHelper.UnAuthorizedResponse());
+
+            using (var connection = _dbHelper.GetConnection())
+            {
+                try
+                {
+                    string sql = @"SELECT 
+  C.NAME,
+  o.order_date,
+  json_agg(f.name) as food_names
+FROM 
+  ""order"" AS o
+  LEFT OUTER JOIN food_menu_item AS fm ON fm.order_id = o.id
+  LEFT OUTER JOIN foods AS f ON f.id = fm.food_id
+  LEFT OUTER JOIN company AS C ON C.ID = o.company_id
+WHERE 
+  is_okey = FALSE
+GROUP BY 
+  C.NAME, o.order_date;";
+
+                    var List = connection.Query<dynamic>(sql).ToList();
+
+                    return Ok(List);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ResponseHelper.ExceptionResponse(ex.Message));
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+        }
+
+
         [HttpPost("add")]
         public async Task<IActionResult> AddOrder(OrderModel model)
         {
@@ -38,16 +80,17 @@ namespace CrudProject.Controller
             {
                 try
                 {
-
                     model.is_okey = false;
                     model.order_date = DateTime.Now;
-                    string sql = @"INSERT INTO order (company_id,order_date,is_okey) VALUES(@company_id,@order_date,false) RETURNING id";
+                    string sql = @"INSERT INTO ""order"" (company_id, order_date, is_okey) VALUES (@company_id, @order_date, false) RETURNING id";
 
-                    int order_id = connection.Query(sql).FirstOrDefault();
+                    int order_id = connection.Query<int>(sql, model).FirstOrDefault();
 
-
-
-
+                    foreach (var item in model.foods)
+                    {
+                        string FoodSql = @"INSERT INTO food_menu_item (food_id, order_id) VALUES (@food_id, @order_id)";
+                        connection.Execute(FoodSql, new { food_id = item.id, order_id = order_id });
+                    }
 
                     return Ok();
                 }
@@ -63,6 +106,6 @@ namespace CrudProject.Controller
         }
 
 
-  
+
     }
 }

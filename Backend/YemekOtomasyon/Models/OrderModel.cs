@@ -9,10 +9,18 @@
 
         public List<OrderFoodModel> foods {  get; set; } 
     }
+    public class OrderListModel
+    {
+        public string name { get; set; }
+
+        public DateTime order_date { get; set; }
+      
+        public List<OrderFoodModel> food_names { get; set; }
+    }
 
     public class OrderFoodModel
     {
-        public int food_id { get; set; }
+        public int id { get; set; }
     }
 
 }

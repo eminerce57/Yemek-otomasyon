@@ -1,5 +1,5 @@
 <script setup>
-import {formatCurrency}from "@/utils/helper";
+import {formatDate}from "@/utils/helper";
 const { data } = defineProps({
   data: Array,
 });
@@ -25,27 +25,16 @@ const deleteFood = (data) => {
     class="p-datatable p-2"
     responsiveLayout="scroll"
   >
-    <Column field="name" header="İsim">
+    <Column field="name" header="Şirket Adı">
     </Column>
-    <Column header="Birim Fiyat">
+    <Column header="Sipariş Tarihi">
       <template #body="{ data }">
-      <strong>{{ formatCurrency(data.amount) }}</strong>
+      <strong>{{ formatDate(data.order_date) }}</strong>
       </template>
     </Column>
-    <Column header="İşlemler" headerStyle="min-width:10rem;">
+    <Column header="Sipariş Tarihi">
       <template #body="{ data }">
-        <Button
-          icon="pi pi-pencil"
-          class="p-button-rounded p-button-primary mr-2"
-          @click="toggleEditModal(data)"
-          v-tooltip.top="'Düzenle'"
-        />
-        <Button
-          icon="pi pi-trash"
-          class="p-button-rounded p-button-warning mt-2"
-          @click="deleteFood(data)"
-          v-tooltip.top="'Sil'"
-        /> 
+      <strong v-for="item in data.food_names" :key="item">  {{ item }}</strong>,
       </template>
     </Column>
   </DataTable>

@@ -2,9 +2,11 @@
 import { ref, onMounted, defineAsyncComponent } from "vue";
 import { useToast } from "primevue/usetoast";
 import OrderService from "@/service/OrderService";
+import CommonService from "@/service/CommonService";
 const orderTable = defineAsyncComponent(() => import("./orderTable.vue"));
 
 const orderService = new OrderService();
+const commonService = new CommonService();
 const toast = useToast();
 // Modals
 const formData = ref({});
@@ -14,23 +16,61 @@ onMounted(() => {
 });
 
 // getlist
-
+const orders = ref([]);
 const getList = () => {
-  foodService.getFood().then((response) => {
+  orderService.GetOrder().then((response) => {
+  orders.value = response;
+  orders.value.forEach(element => {
+    if (typeof element.food_names === 'string') {
+      try {
+        element.food_names = JSON.parse(element.food_names);
+      } catch (error) {
+        console.error("JSON parse error:", error);
+      }
+    }
+  });
+});
+
+  getCompanyList();
+  getFoodList();
+};
+
+const company = ref([]);
+const getCompanyList = () => {
+  commonService.getCompany().then((response) => {
+    company.value = response;
+  });
+};
+const food = ref([]);
+const getFoodList = () => {
+  commonService.getFood().then((response) => {
     food.value = response;
   });
 };
-
 //toggle modals
-
+const orderModal = ref(false);
 const toggleAddmodal = () => {
   formData.value = {};
-  foodModal.value = !foodModal.value;
+  orderModal.value = !orderModal.value;
 };
 
+const addOrder = () => {
 
 
-
+  if (!formData.value.company_id || !formData.value.foods) {
+    toast.add({
+      severity: "warn",
+      summary: "Uyarı!",
+      detail: "Lütfen zorunlu alanları doldurunuz",
+      life: 3000,
+    });
+  } else {
+    orderService.AddOrder(formData.value).then((response) => {
+      orderModal.value = !orderModal.value;
+      getList();
+    });
+  }
+};
 </script>
 
 <template>
@@ -42,11 +82,11 @@ const toggleAddmodal = () => {
           <div class="col-12">
             <Toolbar class="mb-4">
               <template v-slot:start>
-                <h5>Yemek Listesi</h5>
+                <h5>Sipariş Listesi</h5>
               </template>
               <template v-slot:end>
                 <Button
-                  label="Yemek Ekle"
+                  label="Sipariş Ekle"
                   icon="pi pi-plus"
                   class="p-button-primary mr-2"
                   @click="toggleAddmodal"
@@ -58,7 +98,12 @@ const toggleAddmodal = () => {
             <div v-if="food?.length === 0" class="flex justify-content-center">
               Kayıt Bulunamadı.
             </div>
-            <orderTable v-else :data="food" @toggleEditModal="toggleEditModal" @deleteFood="deleteFood" />
+            <orderTable
+              v-else
+              :data="orders"
+              @toggleEditModal="toggleEditModal"
+              @deleteFood="deleteFood"
+            />
           </div>
         </div>
       </div>
@@ -66,26 +111,32 @@ const toggleAddmodal = () => {
 
     <!--****************** START:: DELETE COMMUNITY MODAL ::START *******************************-->
     <Dialog
-      v-model:visible="foodModal"
+      v-model:visible="orderModal"
       :style="{ width: '760px' }"
-      :header="formData.id ? 'Yemek Güncelle' : 'Yemek Ekle'"
+      :header="formData.id ? 'Sipariş Güncelle' : 'Sipariş Ekle'"
       :modal="true"
     >
       <div class="grid">
-        <div class="col-6">
-          <label>Yemek İsmi</label>
-          <InputText
+        <div class="col-12">
+          <label>Şirket Seçiniz</label>
+          <Dropdown
             class="w-full"
-            placeholder="İsim"
-            v-model="formData.name"
+            placeholder="Şirket"
+            :options="company"
+            v-model="formData.company_id"
+            optionLabel="name"
+            optionValue="id"
           />
         </div>
-        <div class="col-6">
-          <label>Birim Fiyat</label>
-          <InputNumber
+        <div class="col-12">
+          <label>Yemek Seçiniz</label>
+          <MultiSelect
+            v-model="formData.foods"
+            :options="food"
+            optionLabel="name"
+   
+            placeholder="Yemek Seçiniz"
             class="w-full"
-            placeholder="Birim Fiyat"
-            v-model="formData.amount"
           />
         </div>
       </div>
@@ -95,7 +146,7 @@ const toggleAddmodal = () => {
           label="Kaydet"
           icon="pi pi-plus"
           class="p-button-success"
-          @click="addFood"
+          @click="addOrder"
         />
         <Button
           v-else
