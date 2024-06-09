@@ -1,60 +1,45 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, defineAsyncComponent } from "vue";
 import { useToast } from "primevue/usetoast";
-import UserService from "@/service/UsersService";
-import { useRouter,useRoute} from "vue-router";
-import companyUsersTable from "./companyUsersTable.vue";
-
-const userService = new UserService();
-const route =useRoute();
+import CompanyUserService from "@/service/CompanyUsersService";
+import CommonService from "@/service/CommonService";
+import { useRouter, useRoute } from "vue-router";
+const companyUsersTable = defineAsyncComponent(() =>
+  import("./companyUsersTable.vue")
+);
+const companyUserService = new CompanyUserService();
+const commonService = new CommonService();
+const route = useRoute();
 const toast = useToast();
 const users = ref([]);
 
 // Modals
 const userModal = ref(false);
 const formData = ref({});
-const companyName=ref("")
+const companyName = ref("");
+const companyId = ref(0);
 onMounted(() => {
+  companyName.value = route.params.name;
+  companyId.value = route.params.id;
   getList();
-  companyName.value= route.params.name
 });
 
-const getList = (args) => {
-  userService.getUsers().then((response) => {
+const getList = () => {
+  companyUserService.getCompanyUser(companyId.value).then((response) => {
     if (response) {
       users.value = response;
     }
   });
 };
 
-// Fill forms
-const fillUserForm = (data) => {
-  const { birth_date, ...rest } = data;
-
-  formData.value = {
-    birth_date: birth_date?.length > 0 ? birth_date.split("T")[0] : "",
-    ...rest,
-  };
-};
-
 // Toggle modals
 const toggleUserModal = (data) => {
-  fillUserForm(data);
-
-  submitted.value = false;
+  formData.value = data;
   userModal.value = !userModal.value;
 };
 
-const toggleDeleteUserModal = (data) => {
-  fillUserForm(data);
-
-  submitted.value = false;
-  deleteUserModal.value = !deleteUserModal.value;
-};
-
 const saveUser = () => {
-  submitted.value = true;
-
+  formData.value.company_id = companyId.value;
   if (
     !formData.value.username &&
     !formData.value.name &&
@@ -68,9 +53,7 @@ const saveUser = () => {
       life: 3000,
     });
   } else {
-    const _data = { ...formData.value };
-
-    userService.saveUser(_data).then((response) => {
+    companyUserService.addCompanyUser(formData.value).then((response) => {
       toast.add({
         severity: "success",
         summary: "Başarılı!",
@@ -83,10 +66,12 @@ const saveUser = () => {
   }
 };
 const updateUser = () => {
-  submitted.value = true;
-  const isValidated = formData?.value?.id;
-
-  if (!isValidated) {
+  if (
+    !formData.value.username &&
+    !formData.value.name &&
+    !formData.value.surname &&
+    !formData.value.password
+  ) {
     toast.add({
       severity: "warn",
       summary: "Uyarı!",
@@ -94,8 +79,7 @@ const updateUser = () => {
       life: 3000,
     });
   } else {
-    const _data = { ...formData.value };
-    userService.updateUser(_data).then((response) => {
+    companyUserService.updateCompanyUser(formData.value).then((response) => {
       toast.add({
         severity: "success",
         summary: "Başarılı!",
@@ -107,16 +91,9 @@ const updateUser = () => {
     });
   }
 };
-const deleteUser = () => {
-  const _id = formData?.value?.id;
-  userService.deleteUser(_id).then((response) => {
-    toast.add({
-      severity: "success",
-      summary: "Başarılı!",
-      detail: "İşlem Başarılı şekilde Tamamlanmıştır.",
-      life: 3000,
-    });
-    deleteUserModal.value = false;
+const deleteUser = (data) => {
+  companyUserService.deleteCompanyUser(data.id).then((response) => {
+ 
     getList();
   });
 };
@@ -151,35 +128,12 @@ const deleteUser = () => {
               v-else
               :data="users"
               @toggleUserModal="toggleUserModal"
-              @toggleDeleteUserModal="toggleDeleteUserModal"
+              @toggleDeleteUserModal="deleteUser"
             />
           </div>
         </div>
       </div>
     </div>
-
-    <!--****************** START:: DELETE COMMUNITY MODAL ::START *******************************-->
-    <Dialog
-      v-model:visible="deleteUserModal"
-      :style="{ width: '450px' }"
-      header="Kullanıcıyı Sil"
-      :modal="true"
-    >
-      <div class="flex align-items-center justify-content-center">
-        <i class="pi pi-exclamation-triangle mr-3 text-4xl" />
-
-        <h4>Kayıt Silinecektir. Bu işleme devam etmek istiyor musunuz?</h4>
-      </div>
-      <template #footer>
-        <Button
-          label="Sil"
-          icon="pi pi-trash"
-          class="p-button-danger"
-          @click="deleteUser"
-        />
-      </template>
-    </Dialog>
-    <!--****************** END:: DELETE COMMUNITY MODAL ::END *******************************-->
 
     <!-- *****************SAVE /UPDATE MODEL START**************************** -->
     <Dialog
@@ -201,9 +155,6 @@ const deleteUser = () => {
             id="first-name"
             type="text"
             class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
-            :class="{
-              'c-invalid': submitted && !formData.name,
-            }"
           />
         </div>
         <div class="field col-6">
@@ -213,11 +164,9 @@ const deleteUser = () => {
             id="last-name"
             type="text"
             class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
-            :class="{
-              'c-invalid': submitted && !formData.surname,
-            }"
           />
         </div>
+
         <div class="field" :class="!formData.id ? 'col-6' : 'col-10'">
           <label for="username">Kullanıcı Adı</label>
           <input
@@ -225,9 +174,6 @@ const deleteUser = () => {
             id="username"
             type="text"
             class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
-            :class="{
-              'c-invalid': submitted && !formData.username,
-            }"
           />
         </div>
         <div class="field col-4" v-if="!formData.id">
@@ -237,9 +183,6 @@ const deleteUser = () => {
             id="password"
             type="password"
             class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
-            :class="{
-              'c-invalid': submitted && !formData.password,
-            }"
           />
         </div>
         <div class="field col-2">
@@ -253,12 +196,6 @@ const deleteUser = () => {
       </div>
 
       <template #footer>
-        <Button
-          label="İptal"
-          icon="pi pi-times"
-          class="p-button-text"
-          @click="userModal = false"
-        />
         <Button
           v-if="formData?.id !== 0 && !formData?.id"
           label="Kaydet"

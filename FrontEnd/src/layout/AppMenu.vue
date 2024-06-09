@@ -24,7 +24,11 @@ const model = ref([
     icon: "pi pi-fw pi-briefcase",
     to: "/pages",
     items: [
-  
+    {
+        label: "Siparişler",
+        icon: "pi pi-sync",
+        to: "/pages/order",
+      },
     ],
   },
   {

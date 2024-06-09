@@ -26,8 +26,8 @@ namespace CrudProject.Controller
 
 
 
-        [HttpGet(":id")]
-        public async Task<IActionResult> GetCompanyUser(int company_id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetCompanyUser(int id)
         {
             GetToken g = new GetToken(_dbHelper);
             var login = g.GetUserByToken(ControllerContext);
@@ -40,7 +40,7 @@ namespace CrudProject.Controller
                 {
                     string sql = @"SELECT * FROM company_users where is_active = true AND company_id=@company_id";
 
-                    var List = connection.Query<dynamic>(sql,new { company_id = company_id}).ToList();
+                    var List = connection.Query<dynamic>(sql,new { company_id = id}).ToList();
 
                     return Ok(List);
                 }
@@ -57,7 +57,7 @@ namespace CrudProject.Controller
 
 
         [HttpPost("add")]
-        public async Task<IActionResult> AddCompany(CompanyUsersModel model)
+        public async Task<IActionResult> AddCompanyUser(CompanyUsersModel model)
         {
             GetToken g = new GetToken(_dbHelper);
             var login = g.GetUserByToken(ControllerContext);
@@ -69,8 +69,9 @@ namespace CrudProject.Controller
                 try
                 {
                    
-                    model.is_active = true; 
-                    string sql = @"INSERT INTO company_users (name,tax_no,is_active) VALUES(@name,@tax_no,@is_active)";
+                    model.is_active = true;
+                    model.created_at = DateTime.Now;
+                    string sql = @"INSERT INTO company_users (company_id,name,surname,username,password,token,created_at,is_admin,is_active) VALUES(@company_id,@name,@surname,@username,@password,@token,@created_at,@is_admin,@is_active)";
                     connection.Execute(sql, model);
 
 
@@ -90,7 +91,7 @@ namespace CrudProject.Controller
 
 
         [HttpPost("update")]
-        public async Task<IActionResult> UpdateCompany(CompanyUsersModel model)
+        public async Task<IActionResult> UpdateCompanyUser(CompanyUsersModel model)
         {
             GetToken g = new GetToken(_dbHelper);
             var login = g.GetUserByToken(ControllerContext);
@@ -101,12 +102,12 @@ namespace CrudProject.Controller
             {
                 try
                 {
-                  
-                    string sql = @"UPDATE company SET name=@name, tax_no=@tax_no WHERE id=@id";
+                    string sql = @"UPDATE company_users 
+                           SET company_id=@company_id, name=@name, surname=@surname, username=@username, is_active=@is_active 
+                           WHERE id=@id";
                     connection.Execute(sql, model);
 
-
-                    return Ok("Kayıt Başarıyla Güncelllendi");
+                    return Ok("Kayıt Başarıyla Güncellendi");
                 }
                 catch (Exception ex)
                 {
@@ -119,8 +120,10 @@ namespace CrudProject.Controller
             }
         }
 
-        [HttpDelete("delete/{id}")]
-        public async Task<IActionResult> deleteCompany(int id)
+    
+
+    [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> DeleteCompanyUser(int id)
         {
             GetToken g = new GetToken(_dbHelper);
             var login = g.GetUserByToken(ControllerContext);
@@ -132,7 +135,7 @@ namespace CrudProject.Controller
                 try
                 {
 
-                    string sql = @"UPDATE company SET is_active=false WHERE id=@id";
+                    string sql = @"UPDATE company_users SET is_active=false WHERE id=@id";
                     connection.Execute(sql, new {id=id});
 
 

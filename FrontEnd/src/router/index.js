@@ -64,8 +64,6 @@ const router = createRouter({
       },
     },
 
-
-
     {
       path: "/pages",
       component: AppLayout,
@@ -89,8 +87,7 @@ const router = createRouter({
             requiresAuth: true,
           },
         },
-        
-        
+
         {
           path: "company",
           name: "Şirketler",
@@ -100,27 +97,32 @@ const router = createRouter({
             requiresAuth: true,
           },
         },
-             
+
         {
           path: "company/:id/:name",
           name: "Şirket Kullanıcıları",
-          component: () => import("@/views/pages/companyUsers/companyUsers.vue"),
+          component: () =>
+            import("@/views/pages/companyUsers/companyUsers.vue"),
           meta: {
             title: "Şirket Kullanıcıları",
             requiresAuth: true,
           },
         },
+
+
+        {
+          path: "order",
+          name: "Siparişler",
+          component: () => import("@/views/pages/order/order.vue"),
+          meta: {
+            title: "Siparişler",
+            requiresAuth: true,
+          },
+        },
+
+
       ],
     },
-
-
-
-
-
-
-
-
-   
   ],
 });
 
