@@ -68,7 +68,7 @@ namespace CrudProject.Controller
             {
                 try
                 {
-                   
+                    model.password = Helper.ComputeMD5Hash(model.password);
                     model.is_active = true;
                     model.created_at = DateTime.Now;
                     string sql = @"INSERT INTO company_users (company_id,name,surname,username,password,token,created_at,is_admin,is_active) VALUES(@company_id,@name,@surname,@username,@password,@token,@created_at,@is_admin,@is_active)";
