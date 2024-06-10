@@ -25,35 +25,13 @@ const model = ref([
     to: "/pages",
     items: [
     {
-        label: "Siparişler",
+        label: "Bugunki Menu",
         icon: "pi pi-sync",
         to: "/pages/order",
       },
     ],
   },
-  {
-    label: "Tanımlar",
-    icon: "pi pi-fw pi-users",
-    to: "/pages",
-    items: [
-    {
-        label: "Yemekler",
-        icon: "pi pi-tags",
-        to: "/pages/food",
-      },
-      {
-        label: "Company",
-        icon: "pi pi-microsoft",
-        to: "/pages/company",
-      },
-      {
-        label: "Kullanıcılar",
-        icon: "pi pi-fw pi-book",
-        to: "/pages/users",
-      },
-
-    ],
-  },
+ 
 
 ]);
 </script>

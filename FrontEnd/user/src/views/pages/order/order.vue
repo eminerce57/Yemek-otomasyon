@@ -35,8 +35,7 @@ const getList = () => {
 
 });
 
-  getCompanyList();
-  getFoodList();
+
 };
 
 const company = ref([]);

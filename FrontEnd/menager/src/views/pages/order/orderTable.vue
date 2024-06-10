@@ -32,11 +32,7 @@ const calculateTotal = (foodNames) => {
         <strong>{{ calculateTotal(data.food_names) }} TL</strong>
       </template>
     </Column>
-    <Column header="Genel Toplam">
-      <template #body="{ data }">
-        <strong>{{ calculateTotal(data.food_names) }} TL</strong>
-      </template>
-    </Column>
+
     <Column header="Tamamlanmış?">
       <template #body="{ data }">
         <strong>{{ data.is_okey ? 'Evet':'Hayır' }}</strong>

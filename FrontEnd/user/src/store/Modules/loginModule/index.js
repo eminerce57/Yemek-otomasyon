@@ -27,7 +27,7 @@ const moduleLogin = {
   actions: {
     login({ commit, dispatch, state }, authData) {
       return axios
-        .post(`${API_URL}User/login`, {
+        .post(`${API_URL}CompanyUsers/login`, {
           username: authData.username,
           password: authData.password,
         })

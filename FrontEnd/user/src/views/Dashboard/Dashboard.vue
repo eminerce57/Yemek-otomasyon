@@ -18,7 +18,7 @@ const getList = (args) => {
 <template>
   <div class="grid">
     <div class="col-12">
-      test
+
     </div> 
   </div>  
   
