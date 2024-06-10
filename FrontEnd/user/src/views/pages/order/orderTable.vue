@@ -4,20 +4,19 @@ const { data } = defineProps({
   data: Array,
 });
 
-const calculateTotal = (foodNames) => {
-  return foodNames.reduce((total, item) => total + item.amount, 0);
+const emit = defineEmits([
+  "toggleAddmodal"
+]);
+
+const toggleAddmodal = (data) => {
+  emit("toggleAddmodal", data);
 };
 </script>
 
 <template>
-  <DataTable
-    :value="data"
-    stripedRows
-    class="p-datatable p-2"
-    responsiveLayout="scroll"
-  >
+  <DataTable :value="data" stripedRows class="p-datatable p-2" responsiveLayout="scroll">
     <Column field="name" header="Şirket Adı"></Column>
-    <Column header="Sipariş Tarihi">
+    <Column header="Menu Tarihi">
       <template #body="{ data }">
         <strong>{{ formatDate(data.order_date) }}</strong>
       </template>
@@ -27,19 +26,10 @@ const calculateTotal = (foodNames) => {
         <Badge v-for="item in data.food_names" :key="item" :value="item.name" severity="secondary" class="mx-1" />
       </template>
     </Column>
-    <Column header="Genel Toplam">
+    <Column header="Yemek Seç">
       <template #body="{ data }">
-        <strong>{{ calculateTotal(data.food_names) }} TL</strong>
-      </template>
-    </Column>
-    <Column header="Genel Toplam">
-      <template #body="{ data }">
-        <strong>{{ calculateTotal(data.food_names) }} TL</strong>
-      </template>
-    </Column>
-    <Column header="Tamamlanmış?">
-      <template #body="{ data }">
-        <strong>{{ data.is_okey ? 'Evet':'Hayır' }}</strong>
+        <Button label="Sipariş Oluştur" icon="pi pi-plus" class="p-button-primary mr-2" @click="toggleAddmodal(data)" />
+
       </template>
     </Column>
   </DataTable>

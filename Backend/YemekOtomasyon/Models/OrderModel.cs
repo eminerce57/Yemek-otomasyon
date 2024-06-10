@@ -11,10 +11,15 @@
     }
     public class OrderListModel
     {
-        public string name { get; set; }
+        public string? name { get; set; }
 
-        public DateTime order_date { get; set; }
+        public DateTime? order_date { get; set; }
       
+        public List<OrderFoodModel> food_names { get; set; }
+    }
+    public class OrderAddModel
+    {
+        public int order_id { get; set; }
         public List<OrderFoodModel> food_names { get; set; }
     }
 

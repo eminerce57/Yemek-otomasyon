@@ -29,6 +29,11 @@ const model = ref([
         icon: "pi pi-sync",
         to: "/pages/order",
       },
+      {
+        label: "Gelen Siparişler",
+        icon: "pi pi-sync",
+        to: "/pages/siparis",
+      },
     ],
   },
   {

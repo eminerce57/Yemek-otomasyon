@@ -11,4 +11,12 @@ export default class OrderService {
       return response.data;
     });
   }
+
+
+
+  GetSiparisOrder() {
+    return axiosApp.get("Order/siparis").then((response) => {
+      return response.data;
+    });
+  }
 }

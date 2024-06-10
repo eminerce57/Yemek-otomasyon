@@ -68,6 +68,45 @@ GROUP BY
         }
 
 
+
+
+
+        [HttpGet("siparis")]
+        public async Task<IActionResult> Siparis()
+        {
+            GetToken g = new GetToken(_dbHelper);
+            var login = g.GetUserByToken(ControllerContext);
+            if (!login.status)
+                return BadRequest(ResponseHelper.UnAuthorizedResponse());
+
+            using (var connection = _dbHelper.GetConnection())
+            {
+                try
+                {
+                    string sql = @"SELECT c.name as company_name, cu.username, fmu.*,f.name FROM food_menu_user_item as fmu LEFT OUTER JOIN foods as f on f.id
+=fmu.food_menu_id LEFT OUTER JOIN company_users as cu on cu.id=fmu.company_user_id LEFT OUTER JOIN company as c on cu.company_id=c.id
+
+        ";
+
+                    var List = connection.Query<dynamic>(sql).ToList();
+
+                    return Ok(List);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ResponseHelper.ExceptionResponse(ex.Message));
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+        }
+
+
+
+
+
         [HttpPost("add")]
         public async Task<IActionResult> AddOrder(OrderModel model)
         {

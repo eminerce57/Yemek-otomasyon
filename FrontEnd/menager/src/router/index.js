@@ -112,14 +112,22 @@ const router = createRouter({
 
         {
           path: "order",
-          name: "Siparişler",
+          name: "Sipariş ver",
           component: () => import("@/views/pages/order/order.vue"),
           meta: {
-            title: "Siparişler",
+            title: "Siparişler ver",
             requiresAuth: true,
           },
         },
-
+        {
+          path: "siparis",
+          name: "gelen Siparişler",
+          component: () => import("@/views/pages/Siparisler/siparis.vue"),
+          meta: {
+            title: "gelen Siparişler",
+            requiresAuth: true,
+          },
+        },
 
       ],
     },

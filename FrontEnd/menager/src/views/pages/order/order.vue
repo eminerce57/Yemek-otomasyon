@@ -99,11 +99,7 @@ const addOrder = () => {
             </Toolbar>
           </div>
           <div class="col-12">
-            <div v-if="food?.length === 0" class="flex justify-content-center">
-              Kayıt Bulunamadı.
-            </div>
             <orderTable
-              v-else
               :data="orders"
               @toggleEditModal="toggleEditModal"
               @deleteFood="deleteFood"
