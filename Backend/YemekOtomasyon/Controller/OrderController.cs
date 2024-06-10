@@ -41,16 +41,16 @@ namespace CrudProject.Controller
                     string sql = @"SELECT 
   C.NAME,
   o.order_date,
-  json_agg(f.name) as food_names
+    o.is_okey,
+  json_agg(json_build_object('name', f.name, 'amount', f.amount)) as food_names
 FROM 
   ""order"" AS o
   LEFT OUTER JOIN food_menu_item AS fm ON fm.order_id = o.id
   LEFT OUTER JOIN foods AS f ON f.id = fm.food_id
   LEFT OUTER JOIN company AS C ON C.ID = o.company_id
-WHERE 
-  is_okey = FALSE
 GROUP BY 
-  C.NAME, o.order_date;";
+  C.NAME,o.is_okey, o.order_date;
+";
 
                     var List = connection.Query<dynamic>(sql).ToList();
 

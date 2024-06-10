@@ -20,15 +20,19 @@ const orders = ref([]);
 const getList = () => {
   orderService.GetOrder().then((response) => {
   orders.value = response;
+
   orders.value.forEach(element => {
-    if (typeof element.food_names === 'string') {
-      try {
-        element.food_names = JSON.parse(element.food_names);
-      } catch (error) {
-        console.error("JSON parse error:", error);
-      }
+  if (typeof element.food_names === 'string') {
+    try {
+      element.food_names = JSON.parse(element.food_names);
+    } catch (error) {
+      console.error("JSON parse error:", error);
     }
-  });
+  }
+});
+
+
+
 });
 
   getCompanyList();

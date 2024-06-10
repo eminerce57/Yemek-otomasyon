@@ -1,21 +1,12 @@
 <script setup>
-import {formatDate}from "@/utils/helper";
+import { formatDate } from "@/utils/helper";
 const { data } = defineProps({
   data: Array,
 });
 
-const emit = defineEmits([
-  "toggleEditModal",
-  "deleteFood",
-]);
-
-const toggleEditModal = (data) => {
-  emit("toggleEditModal", data);
+const calculateTotal = (foodNames) => {
+  return foodNames.reduce((total, item) => total + item.amount, 0);
 };
-const deleteFood = (data) => {
-  emit("deleteFood", data.id);
-};
-
 </script>
 
 <template>
@@ -25,16 +16,30 @@ const deleteFood = (data) => {
     class="p-datatable p-2"
     responsiveLayout="scroll"
   >
-    <Column field="name" header="Şirket Adı">
-    </Column>
+    <Column field="name" header="Şirket Adı"></Column>
     <Column header="Sipariş Tarihi">
       <template #body="{ data }">
-      <strong>{{ formatDate(data.order_date) }}</strong>
+        <strong>{{ formatDate(data.order_date) }}</strong>
       </template>
     </Column>
-    <Column header="Sipariş Tarihi">
+    <Column header="Yemekler">
       <template #body="{ data }">
-      <strong v-for="item in data.food_names" :key="item">  {{ item }}</strong>,
+        <Badge v-for="item in data.food_names" :key="item" :value="item.name" severity="secondary" class="mx-1" />
+      </template>
+    </Column>
+    <Column header="Genel Toplam">
+      <template #body="{ data }">
+        <strong>{{ calculateTotal(data.food_names) }} TL</strong>
+      </template>
+    </Column>
+    <Column header="Genel Toplam">
+      <template #body="{ data }">
+        <strong>{{ calculateTotal(data.food_names) }} TL</strong>
+      </template>
+    </Column>
+    <Column header="Tamamlanmış?">
+      <template #body="{ data }">
+        <strong>{{ data.is_okey ? 'Evet':'Hayır' }}</strong>
       </template>
     </Column>
   </DataTable>
